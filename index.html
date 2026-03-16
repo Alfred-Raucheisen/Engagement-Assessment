@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Engagement-Assessment</title>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init({publicKey:'X5DcsZZxy0M4C--XH',privateKey:'jAZVBAt4CR_Yitl2oKVw4'});</script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1a2744;--gold:#C8A84B;--cream:#FAF8F4;--light:#EEF3FA;
+  --border:#D4DDF0;--muted:#6b7a99;--blue:#2E75B6;--orange:#D4621A;
+  --green:#1E6B3C;--card:#FFFFFF;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--navy);min-height:100vh;}
+.container{max-width:820px;margin:0 auto;padding:0 24px;}
+.screen{display:none;}.screen.active{display:block;}
+
+.hero{background:var(--navy);padding:52px 24px 44px;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:rgba(200,168,75,0.12);}
+.hero::after{content:'';position:absolute;bottom:-40px;left:-40px;width:160px;height:160px;border-radius:50%;background:rgba(46,117,182,0.15);}
+.hero .kicker{color:var(--gold);font-size:11px;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:14px;position:relative;z-index:1;}
+.hero h1{font-family:'Playfair Display',serif;font-size:38px;color:#fff;font-weight:700;line-height:1.15;margin-bottom:14px;position:relative;z-index:1;}
+.hero p{color:rgba(255,255,255,0.65);font-size:15px;line-height:1.65;max-width:540px;margin:0 auto 32px;font-weight:300;position:relative;z-index:1;}
+.concept-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:36px;position:relative;z-index:1;}
+.concept-pill{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:40px;padding:8px 18px;font-size:12px;color:rgba(255,255,255,0.85);line-height:1.4;}
+.concept-pill strong{color:#fff;}
+.btn-start{display:inline-block;background:var(--gold);color:var(--navy);border:none;border-radius:8px;padding:14px 36px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s;position:relative;z-index:1;}
+.btn-start:hover{background:#dbb84f;transform:translateY(-1px);box-shadow:0 4px 16px rgba(200,168,75,0.35);}
+
+.intro-form{background:var(--card);border-radius:12px;border:1.5px solid var(--border);padding:28px;margin:28px 0;}
+.form-group{margin-bottom:20px;}
+.form-group:last-child{margin-bottom:0;}
+.form-label{font-size:13px;font-weight:600;color:var(--navy);margin-bottom:8px;display:block;}
+.form-input{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--navy);outline:none;transition:border-color .2s;}
+.form-input:focus{border-color:var(--blue);}
+
+.progress-wrap{background:var(--navy);padding:16px 24px;position:sticky;top:0;z-index:100;}
+.progress-inner{max-width:820px;margin:0 auto;display:flex;align-items:center;gap:16px;}
+.progress-bar-bg{flex:1;height:5px;background:rgba(255,255,255,0.15);border-radius:3px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--gold));border-radius:3px;transition:width .4s ease;}
+.progress-text{color:rgba(255,255,255,0.6);font-size:12px;white-space:nowrap;min-width:70px;text-align:right;}
+
+.page-wrap{padding:36px 0 60px;}
+.page-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;margin-bottom:6px;}
+.page-sub{color:var(--muted);font-size:14px;margin-bottom:28px;line-height:1.5;}
+
+.cluster-card{background:var(--card);border-radius:12px;border:1.5px solid var(--border);margin-bottom:16px;overflow:hidden;transition:border-color .2s;}
+.cluster-card.has-rating{border-color:var(--navy);}
+.cluster-card.hot{border-color:var(--gold);}
+.cluster-top{padding:20px 22px;display:flex;align-items:center;gap:16px;}
+.cluster-badge{width:28px;height:28px;border-radius:5px;background:#8A99B0;display:flex;align-items:center;justify-content:center;font-family:'DM Sans',sans-serif;font-size:12px;color:#fff;font-weight:600;flex-shrink:0;}
+.cluster-info{flex:1;min-width:0;}
+.cluster-name{font-size:15px;font-weight:600;line-height:1.3;}
+.cluster-tagline{font-size:12px;color:var(--muted);margin-top:3px;font-weight:300;font-style:italic;}
+
+.rating-block{display:flex;flex-direction:column;gap:10px;padding:0 22px 18px;}
+.rating-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.rating-label{width:90px;flex-shrink:0;}
+.rating-dim{font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);}
+.rating-anchor{font-size:11px;color:var(--muted);font-weight:300;white-space:nowrap;min-width:36px;}
+.btn-group{display:flex;gap:6px;}
+.btn-score{width:36px;height:36px;border-radius:7px;border:1.5px solid var(--border);background:#fff;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;color:var(--muted);}
+.btn-score:hover{border-color:var(--navy);color:var(--navy);}
+.btn-score.sel-l{background:var(--navy);border-color:var(--navy);color:#fff;}
+.btn-score.sel-n{background:var(--gold);border-color:var(--gold);color:var(--navy);}
+
+.expand-row{padding:0 22px 16px;}
+.btn-expand{background:none;border:1.5px dashed var(--border);border-radius:7px;padding:8px 16px;font-size:12px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;width:100%;text-align:center;}
+.btn-expand:hover{border-color:var(--navy);color:var(--navy);}
+
+.subitems{border-top:1px solid var(--light);padding:16px 22px;display:none;}
+.subitems.open{display:block;}
+.sub-item{padding:10px 0;border-bottom:1px solid var(--light);display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.sub-item:last-child{border-bottom:none;}
+.sub-name{font-size:13px;flex:1;min-width:160px;color:var(--navy);}
+.sub-btns{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.sub-dim{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;}
+.sub-dim.l{color:var(--navy);}
+.sub-dim.n{color:var(--gold);}
+.sub-btn-group{display:flex;gap:4px;}
+.sub-btn{width:28px;height:28px;border-radius:5px;border:1.5px solid var(--border);background:#fff;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;color:var(--muted);}
+.sub-btn:hover{border-color:var(--navy);color:var(--navy);}
+.sub-btn.sel-l{background:var(--navy);border-color:var(--navy);color:#fff;}
+.sub-btn.sel-n{background:var(--gold);border-color:var(--gold);color:var(--navy);}
+
+.nav-row{display:flex;gap:12px;align-items:center;margin-top:32px;flex-wrap:wrap;}
+.btn-nav{border:none;border-radius:8px;padding:12px 28px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;}
+.btn-next{background:var(--navy);color:#fff;}
+.btn-next:hover:not(:disabled){background:var(--blue);}
+.btn-next:disabled{background:var(--border);color:var(--muted);cursor:not-allowed;}
+.btn-back{background:transparent;color:var(--navy);border:1.5px solid var(--navy);}
+.btn-back:hover{background:var(--light);}
+
+/* RESULTS */
+.results-header{background:var(--navy);padding:52px 24px 40px;margin-bottom:0;position:relative;overflow:hidden;text-align:center;}
+.results-header::before{content:'';position:absolute;top:-80px;right:-80px;width:300px;height:300px;border-radius:50%;background:rgba(200,168,75,0.08);}
+.results-header::after{content:'';position:absolute;bottom:-60px;left:-60px;width:200px;height:200px;border-radius:50%;background:rgba(46,117,182,0.1);}
+.results-kicker{color:var(--gold);font-size:10px;font-weight:600;letter-spacing:.25em;text-transform:uppercase;margin-bottom:12px;position:relative;z-index:1;}
+.results-header h2{font-family:'Playfair Display',serif;font-size:44px;color:#fff;font-weight:700;line-height:1.1;margin-bottom:10px;position:relative;z-index:1;}
+.results-header h2 em{color:var(--gold);font-style:italic;}
+.results-header p{color:rgba(255,255,255,0.45);font-size:14px;position:relative;z-index:1;}
+.results-body{padding:40px 0 20px;}
+
+.scatter-card{background:var(--card);border:1.5px solid var(--border);border-radius:14px;padding:28px 28px 20px;margin-bottom:24px;}
+.scatter-title{font-family:'Playfair Display',serif;font-size:18px;color:var(--navy);margin-bottom:6px;font-weight:600;}
+.scatter-legend{display:flex;gap:20px;margin-bottom:16px;flex-wrap:wrap;}
+.leg-item{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted);}
+.leg-dot{width:12px;height:12px;border-radius:50%;}
+.leg-dot.gold{background:var(--gold);}
+.leg-dot.navy{background:var(--navy);}
+.leg-dot.gray{background:#CBD5E1;}
+#scatterCanvas{width:100%;max-width:680px;display:block;border-radius:8px;border:1px solid var(--border);}
+
+.results-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;}
+.result-panel{background:var(--card);border-radius:12px;border:1.5px solid var(--border);padding:20px;}
+.result-panel.seele{border-color:var(--navy);}
+.result-panel.pflicht{border-color:#FCCBA8;}
+.result-panel.reduce{border-color:var(--border);}
+.result-panel-title{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:4px;}
+.result-panel-sub{font-size:11px;color:var(--muted);margin-bottom:12px;font-style:italic;}
+.result-tags{}
+.result-tag{display:inline-block;background:var(--light);border-radius:20px;padding:3px 10px;font-size:11.5px;font-weight:500;margin:3px 2px;color:var(--navy);}
+.result-tag.gold-tag{background:linear-gradient(135deg,#F5E9C8,#EDD98A);color:#7A5C00;}
+.result-tag.seele-tag{background:var(--light);color:var(--navy);}
+.result-tag.empty{color:var(--muted);font-style:italic;font-size:11px;}
+
+.ranking-card{background:var(--card);border-radius:12px;border:1.5px solid var(--border);padding:28px;margin-bottom:24px;}
+.ranking-card-title{font-family:'Playfair Display',serif;font-size:18px;color:var(--navy);margin-bottom:18px;font-weight:600;}
+.rank-table{width:100%;border-collapse:collapse;}
+.rank-table thead tr{background:var(--navy);border-radius:8px;}
+.rank-table thead th{padding:10px 14px;font-size:11px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:rgba(255,255,255,0.7);text-align:left;}
+.rank-table thead th.rth-val{text-align:center;width:52px;}
+.rank-table thead th.rth-pos{width:44px;}
+.rank-table tbody tr{border-bottom:1px solid var(--light);}
+.rank-table tbody tr:last-child{border-bottom:none;}
+.rank-table tbody td{padding:11px 14px;font-size:13.5px;color:var(--navy);}
+.rank-table tbody td.rtd-val{text-align:center;font-weight:600;font-size:13px;}
+.rank-table tbody td.rtd-l{color:var(--navy);}
+.rank-table tbody td.rtd-n{color:var(--gold);}
+.rank-table tbody td.rtd-p{background:var(--navy);color:#fff;border-radius:20px;font-weight:700;text-align:center;}
+.rtd-p-wrap{display:inline-block;background:var(--navy);color:#fff;border-radius:20px;padding:2px 12px;font-size:12px;font-weight:700;}
+
+.export-card{background:var(--card);border-radius:12px;border:1.5px solid var(--border);padding:28px;margin-bottom:24px;}
+.export-card-title{font-family:'Playfair Display',serif;font-size:18px;color:var(--navy);margin-bottom:16px;font-weight:600;}
+.export-text{background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:18px 20px;font-size:12.5px;line-height:1.8;color:var(--navy);white-space:pre-wrap;max-height:280px;overflow-y:auto;font-family:'DM Sans',sans-serif;}
+.btn-copy{margin-top:12px;background:var(--light);color:var(--navy);border:none;border-radius:7px;padding:8px 18px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;}
+.btn-copy:hover{background:var(--blue);color:#fff;}
+
+@media(max-width:640px){
+  .results-grid-2{grid-template-columns:1fr;}
+  .results-header h2{font-size:32px;}
+}
+</style>
+</head>
+<body>
+
+<!-- INTRO -->
+<div class="screen active" id="screen-intro">
+  <div class="hero">
+    <div class="container">
+      <div class="kicker">Anwalts-Coaching · Raucheisen Consulting</div>
+      <h1>Engagement-Assessment</h1>
+      <p>Welche nicht-beruflichen Engagements sind für Sie persönlich bedeutsam — und welche bieten gleichzeitig strategisches Netzwerkpotenzial für Ihre Praxis?</p>
+      <div class="concept-row">
+        <div class="concept-pill"><strong>Leidenschaft</strong> = Zulassungsbedingung</div>
+        <div class="concept-pill"><strong>Netzwerkpotenzial</strong> = Selektionsbedingung</div>
+        <div class="concept-pill">14 Cluster · ca. 10 Min.</div>
+      </div>
+      <button class="btn-start" onclick="startAssessment()">Assessment starten</button>
+    </div>
+  </div>
+  <div class="container">
+    <div class="intro-form">
+      <div class="form-group">
+        <label class="form-label">Ihr Name</label>
+        <input class="form-input" id="inputName" type="text" placeholder="Vor- und Nachname">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Datum</label>
+        <input class="form-input" id="inputDate" type="date">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- QUESTIONNAIRE -->
+<div class="screen" id="screen-questions">
+  <div class="progress-wrap">
+    <div class="progress-inner">
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
+      <div class="progress-text" id="progressText">Seite 1 / 5</div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="page-wrap">
+      <div class="page-title" id="pageTitle"></div>
+      <div class="page-sub">Bewerten Sie jeden Cluster: Wie viel <strong>Leidenschaft</strong> bringen Sie mit (1–5) und wie hoch ist das <strong>Netzwerkpotenzial</strong> für Ihre Praxis (1–5)? Bei einer 5 klappen die Einzelengagements automatisch auf. Bei Clustern mit hoher Leidenschaft lohnt es sich, auch die konkreten Engagements darunter anzuschauen — das erleichtert später die Zielformulierung im Coaching.</div>
+      <div id="cardContainer"></div>
+      <div class="nav-row">
+        <button class="btn-nav btn-back" id="btnBack" onclick="prevPage()">← Zurück</button>
+        <button class="btn-nav btn-next" id="btnNext" onclick="nextPage()">Weiter →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div class="screen" id="screen-results">
+  <div class="results-header">
+    <div class="container">
+      <div class="results-kicker">Coach-Auswertung</div>
+      <h2>Engagement-<em>Assessment</em></h2>
+      <p id="resultsSubtitle"></p>
+    </div>
+  </div>
+  <div class="container results-body">
+
+    <div class="scatter-card">
+      <div class="scatter-title">Sweet-Spot-Matrix</div>
+      <div class="scatter-legend">
+        <span class="leg-item"><span class="leg-dot gold"></span> Goldzone (L×N ≥ 9)</span>
+        <span class="leg-item"><span class="leg-dot navy"></span> Potenzial (L×N 4–8)</span>
+        <span class="leg-item"><span class="leg-dot gray"></span> Radar (L×N &lt; 4)</span>
+      </div>
+      <canvas id="scatterCanvas" width="680" height="420"></canvas>
+      <div id="scatterOverlap" style="font-size:12px;color:#8899BB;margin-top:12px;line-height:1.6;"></div>
+    </div>
+
+    <div class="results-grid-2">
+      <div class="result-panel">
+        <div class="result-panel-title">⭐ Goldzone</div>
+        <div class="result-panel-sub">Leidenschaft hoch · Netzwerk hoch</div>
+        <div id="res-gold" class="result-tags"></div>
+      </div>
+      <div class="result-panel seele">
+        <div class="result-panel-title">🌿 Seelenpflege</div>
+        <div class="result-panel-sub">Leidenschaft hoch · Netzwerk tief</div>
+        <div id="res-seele" class="result-tags"></div>
+      </div>
+      <div class="result-panel pflicht">
+        <div class="result-panel-title">⚠ Pflichtübung</div>
+        <div class="result-panel-sub">Netzwerk hoch · Leidenschaft tief</div>
+        <div id="res-pflicht" class="result-tags"></div>
+      </div>
+      <div class="result-panel reduce">
+        <div class="result-panel-title">◻ Reduzieren</div>
+        <div class="result-panel-sub">Weder Leidenschaft noch Netzwerk</div>
+        <div id="res-reduce" class="result-tags"></div>
+      </div>
+    </div>
+
+    <div class="ranking-card">
+      <div class="ranking-card-title">Ranking nach Gesamtscore</div>
+      <table class="rank-table">
+        <thead>
+          <tr>
+            <th class="rth-pos">#</th>
+            <th class="rth-name">Cluster</th>
+            <th class="rth-val">L</th>
+            <th class="rth-val">N</th>
+            <th class="rth-val">P</th>
+          </tr>
+        </thead>
+        <tbody id="rankingList"></tbody>
+      </table>
+    </div>
+
+    <div class="export-card">
+      <div class="export-card-title">Zusammenfassung für den Coach</div>
+      <div class="export-text" id="exportText"></div>
+      <button class="btn-copy" onclick="copyExport()">Kopieren</button>
+    </div>
+
+    <div class="nav-row" style="padding-bottom:60px;">
+      <button class="btn-nav btn-next" id="btnSendEmail" onclick="sendEmail()">📧 Auswertung an Coach senden</button>
+      <button class="btn-nav btn-back" onclick="goBack()">← Bewertung anpassen</button>
+      <button class="btn-nav btn-back" onclick="resetAll()">Neue Erfassung</button>
+    </div>
+    <div id="emailStatus" style="text-align:center;font-size:13px;color:var(--muted);padding-bottom:40px;display:none;"></div>
+  </div>
+</div>
+
+<script>
+const CLUSTERS = [
+  { letter:"A", name:"Service Clubs & Business-Netzwerke", tagline:"Strukturierter Zugang zu Entscheidern",
+    items:["Rotary International","Lions Clubs International","Kiwanis International","Round Table International","Young Presidents' Organization (YPO)","Entrepreneurs' Organization (EO)","Swiss Economic Forum (SEF)","Swiss Venture Club","Zonta International"] },
+  { letter:"B", name:"Tradition, Zunft & Brauchtum", tagline:"Die ältesten exklusiven Netzwerke der Schweiz",
+    items:["Zünfte Zürich (Sechseläuten)","Basler Fasnachts-Comités","Schützengesellschaften","Freimaurerlogen","Milizoffizier-Netzwerke"] },
+  { letter:"C", name:"Kultur, Kunst & Patronage", tagline:"Aktive Beteiligung vs. passives Mäzenatentum",
+    items:["Kunsthaus Zürich — Förderkreis","Tonhalle-Gesellschaft Zürich","Opernhaus Zürich — Freundeskreis","Schauspielhaus Zürich — Freundeskreis","Fondation Beyeler — Patronage","Zürich Film Festival / Lucerne Festival","Art Basel — Partnerkreise","Zoo Zürich — Förderverein / Stiftungsrat","Kunstsammler- / Uhrensammler-Kreise","Laienorchester / Kammermusikensemble","Chor (Jodel, Kirche, Männerchor)","Laientheater / Improvisationstheater"] },
+  { letter:"D", name:"Bildung, Wissenschaft & Jugend", tagline:"Gesellschaftliche Verantwortung mit akademischem Netzwerk",
+    items:["ETH Foundation / ETH-Rat","Universitätsrat UZH / HSG","Alumni (UZH, ETH, HSG, Harvard, INSEAD)","Schulpflege / Schulrat","Gymnasialkommissionen","Pro Juventute — Stiftungsrat","Jugend debattiert — Juror / Botschafter","Moot Court — Coach / Juror / Organisator"] },
+  { letter:"E", name:"Politik, Public Affairs & Medien", tagline:"Direkter Zugang zu Regulatoren und Entscheidern",
+    items:["Gemeinderat / Stadtrat","Kantonsrat","Parteikommissionen","Avenir Suisse","Foraus — Forum Aussenpolitik","Eidgenössische Expertenkommissionen","NZZ-Gesellschaft","SRG Deutschschweiz — Publikumsrat","Presserat"] },
+  { letter:"F", name:"Wirtschaft, Verbände & Kammern", tagline:"Der klassische Anwaltsnetzwerk-Kanal",
+    items:["economiesuisse","Handelskammer Zürich (HAV)","Basler Handelskammer","Swiss-American Chamber of Commerce","Swiss Bankers Association","Swiss Insurance Association","SVIT (Immobilien)","SECA (Private Equity)","ICC Schweiz / Switzerland Global Enterprise"] },
+  { letter:"G", name:"Philanthropie, Stiftungen & Pro Bono", tagline:"Gesellschaftliche Wirkung mit höchstem Reputationseffekt",
+    items:["Stiftungsratsmandate (gemeinnützig)","SwissFoundations","Pro Bono Legal (Amnesty, UNHCR)","Förderverein Universitätsspital (USZ)","Förderverein Kinderspital Zürich — inkl. Jahresgala","Schweizerisches Rotes Kreuz","Caritas Schweiz / Helvetas","Ashoka Schweiz","SOS-Kinderdorf Schweiz","Pro Senectute"] },
+  { letter:"H", name:"Sport, Natur & Freizeit", tagline:"Authentizität entsteht dort, wo man sich wirklich wohlfühlt",
+    items:["Swiss Ski — Vorstand / Kommissionen","Skiclub mit Tradition (SC Zürich, SAC)","Golfclub (Zürich, Zumikon, Bad Ragaz)","Golf Schweiz — Verbandsarbeit","Segelclub / Regattaclub","Swiss Tennis — Verband","Schweizer Alpen-Club (SAC)","Swiss Olympic — Rechtsgremien","Jagdgesellschaft","Reiten / Poloclubs"] },
+  { letter:"I", name:"International & Diplomatisch", tagline:"Für international tätige Anwälte",
+    items:["International Bar Association (IBA)","AIJA (Jungrechtsanwälte bis 45)","Diplomatisches Corps Zürich","UN Global Compact Schweiz","ICRC (IKRK) — Beratungsgremien","WIPO-nahe Netzwerke","World Economic Forum"] },
+  { letter:"J", name:"Digital, Innovation & Legal Tech", tagline:"Zukunftsrelevanz signalisieren — aber authentisch",
+    items:["Swiss Legal Tech Association","Legal Hackers Zürich / Genf","digitalswitzerland","AI+ (KI-Netzwerk Schweiz)","F10 Fintech Incubator","ETH AI Center Advisory"] },
+  { letter:"K", name:"Tafelkultur, Genuss & Geselligkeit", tagline:"Netzwerken ohne BD-Anstrich — der entspannteste Kanal",
+    items:["Chaîne des Rôtisseurs","Confrérie de la Channe (Walliser Wein)","Chevaliers du Tastevin (Burgund)","Kantonale Weinbruderschaften","Davidoff Club Zürich","Private Dinner-Gesellschaft / Stammtisch","Slow Food Schweiz","Weinreisen (Bordeaux, Burgund)"] },
+  { letter:"L", name:"Immobilien, Architektur & Lokales", tagline:"Spezifische Kanäle für Real Estate- und Stadtentwicklungs-Praxis",
+    items:["SVIT Vorstand / Fachkommissionen","Heimatschutz Schweiz / Denkmalpflege","Stadtentwicklungskommissionen","Gesellschaft für das Gute und Gemeinnützige (GGG Basel)","Quartierverein","Lokaler Gewerbeverein"] },
+  { letter:"M", name:"Frauen, Gender & Chancengleichheit", tagline:"Wachsendes und einflussreiches Netzwerkfeld",
+    items:["Business and Professional Women (BPW)","Soroptimist International","Swiss Board Women","Netzwerk Schweizer Juristinnen","Alliance F","Terre des Femmes Schweiz","Women in Tech Switzerland","UN Women Schweiz"] },
+  { letter:"N", name:"Umwelt, Aktivismus, Ethik & ESG", tagline:"Haltung zeigen — mit Relevanz für ESG und Regulierung",
+    items:["WWF Schweiz — Stiftungsrat / Patronat","Pro Natura","Greenpeace Schweiz","Klimaseniorinnen Schweiz","Swiss Climate Foundation","Ethos — Fondation Ethos (Aktionärsstiftung)","Swiss Sustainable Finance (SSF)","Transparency International Schweiz","Basel Institute on Governance","Ethikkommissionen (kantonal / national)"] }
+];
+
+const PAGES = [
+  { title:"Service Clubs, Tradition & Kultur",    clusters:[0,1,2]   },
+  { title:"Bildung, Politik & Wirtschaft",        clusters:[3,4,5]   },
+  { title:"Philanthropie, Sport & International", clusters:[6,7,8]   },
+  { title:"Digital, Tafelkultur & Spezialfelder", clusters:[9,10,11] },
+  { title:"Frauen, Umwelt & Ethik",               clusters:[12,13]   }
+];
+
+let answers = CLUSTERS.map(() => ({ l:null, n:null, subs:{} }));
+let currentPage = 0;
+let manualOpen = new Set();
+
+function startAssessment() {
+  const d = document.getElementById('inputDate');
+  if (!d.value) d.value = new Date().toISOString().slice(0,10);
+  showScreen('screen-questions');
+  renderPage();
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+function renderPage() {
+  const pg = PAGES[currentPage];
+  document.getElementById('pageTitle').textContent = pg.title;
+  document.getElementById('progressText').textContent = `Seite ${currentPage+1} / ${PAGES.length}`;
+  document.getElementById('progressFill').style.width = ((currentPage+1)/PAGES.length*100)+'%';
+  document.getElementById('btnBack').style.display = currentPage===0 ? 'none' : '';
+  document.getElementById('btnNext').textContent = currentPage===PAGES.length-1 ? 'Auswertung anzeigen →' : 'Weiter →';
+  const c = document.getElementById('cardContainer');
+  c.innerHTML = '';
+  pg.clusters.forEach(ci => c.appendChild(buildCard(ci)));
+  updateNextButton();
+}
+
+function buildCard(ci) {
+  const cl = CLUSTERS[ci];
+  const a = answers[ci];
+  const isOpen = manualOpen.has(ci) || a.l===5 || a.n===5;
+  const hasRating = a.l!==null || a.n!==null;
+  const isHot = a.l===5 || a.n===5;
+
+  const card = document.createElement('div');
+  card.className = 'cluster-card' + (hasRating?' has-rating':'') + (isHot?' hot':'');
+  card.id = 'card-'+ci;
+
+  card.innerHTML = `
+    <div class="cluster-top">
+      <div class="cluster-badge">${cl.letter}</div>
+      <div class="cluster-info">
+        <div class="cluster-name">${cl.name}</div>
+        <div class="cluster-tagline">${cl.tagline}</div>
+      </div>
+    </div>
+    <div class="rating-block">
+      <div class="rating-row">
+        <div class="rating-label"><div class="rating-dim">Leidenschaft</div></div>
+        <span class="rating-anchor">keine</span>
+        <div class="btn-group">
+          ${[1,2,3,4,5].map(v=>`<button class="btn-score${a.l===v?' sel-l':''}" onclick="setScore(${ci},'l',${v})">${v}</button>`).join('')}
+        </div>
+        <span class="rating-anchor">Leidenschaft</span>
+      </div>
+      <div class="rating-row">
+        <div class="rating-label"><div class="rating-dim">Netzwerk</div></div>
+        <span class="rating-anchor">gering</span>
+        <div class="btn-group">
+          ${[1,2,3,4,5].map(v=>`<button class="btn-score${a.n===v?' sel-n':''}" onclick="setScore(${ci},'n',${v})">${v}</button>`).join('')}
+        </div>
+        <span class="rating-anchor">hoch</span>
+      </div>
+    </div>
+    <div class="expand-row">
+      <button class="btn-expand" onclick="toggleSubs(${ci})">
+        ${isOpen ? '▲ Einzelne Engagements ausblenden' : '▾ Einzelne Engagements bewerten (optional)'}
+      </button>
+    </div>
+    <div class="subitems${isOpen?' open':''}" id="subs-${ci}">
+      ${cl.items.map((item,ii)=>{
+        const s = a.subs[ii]||{};
+        return `<div class="sub-item">
+          <div class="sub-name">${item}</div>
+          <div class="sub-btns">
+            <div class="sub-dim l">L</div>
+            <div class="sub-btn-group">
+              ${[1,2,3,4,5].map(v=>`<button class="sub-btn${s.l===v?' sel-l':''}" id="sbl_${ci}_${ii}_${v}" onclick="setSubScore(${ci},${ii},'l',${v})">${v}</button>`).join('')}
+            </div>
+            <div class="sub-dim n" style="margin-left:6px;">N</div>
+            <div class="sub-btn-group">
+              ${[1,2,3,4,5].map(v=>`<button class="sub-btn${s.n===v?' sel-n':''}" id="sbn_${ci}_${ii}_${v}" onclick="setSubScore(${ci},${ii},'n',${v})">${v}</button>`).join('')}
+            </div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+  return card;
+}
+
+function setScore(ci, dim, val) {
+  answers[ci][dim] = val;
+  if (val===5) manualOpen.add(ci);
+  rebuildCard(ci);
+  updateNextButton();
+}
+
+function setSubScore(ci, ii, dim, val) {
+  if (!answers[ci].subs[ii]) answers[ci].subs[ii]={};
+  answers[ci].subs[ii][dim] = val;
+  // update only affected buttons
+  for(let v=1;v<=5;v++){
+    const id = (dim==='l'?'sbl':'sbn')+'_'+ci+'_'+ii+'_'+v;
+    const btn = document.getElementById(id);
+    if(btn) btn.className = 'sub-btn'+(v===val?' sel-'+dim:'');
+  }
+}
+
+function toggleSubs(ci) {
+  if(manualOpen.has(ci)) manualOpen.delete(ci); else manualOpen.add(ci);
+  rebuildCard(ci);
+}
+
+function rebuildCard(ci) {
+  const old = document.getElementById('card-'+ci);
+  if(old) old.replaceWith(buildCard(ci));
+}
+
+function updateNextButton() {
+  const pg = PAGES[currentPage];
+  const allRated = pg.clusters.every(ci => answers[ci].l!==null && answers[ci].n!==null);
+  const btn = document.getElementById('btnNext');
+  if(btn) btn.disabled = !allRated;
+}
+
+function nextPage() {
+  const pg = PAGES[currentPage];
+  const allRated = pg.clusters.every(ci => answers[ci].l!==null && answers[ci].n!==null);
+  if(!allRated) return;
+  if(currentPage < PAGES.length-1){ currentPage++; renderPage(); }
+  else { buildResults(); showScreen('screen-results'); }
+}
+
+function prevPage() {
+  if(currentPage>0){ currentPage--; renderPage(); }
+}
+
+function goBack() { showScreen('screen-questions'); renderPage(); }
+
+function buildResults() {
+  const name = document.getElementById('inputName').value || 'Coachee';
+  const date = document.getElementById('inputDate').value || '';
+  document.getElementById('resultsSubtitle').textContent = `${name}  ·  ${date}`;
+
+  const scored = CLUSTERS.map((cl,ci)=>{
+    const a=answers[ci];
+    return {ci, letter:cl.letter, name:cl.name, l:a.l||0, n:a.n||0, total:(a.l||0)*(a.n||0)};
+  }).filter(s=>s.l>0||s.n>0);
+
+  const gold    = scored.filter(s=>s.l>=3&&s.n>=3);
+  const seele   = scored.filter(s=>s.l>=3&&s.n<3);
+  const pflicht = scored.filter(s=>s.l<3&&s.n>=3);
+  const reduce  = scored.filter(s=>s.l>0&&s.l<3&&s.n>0&&s.n<3);
+
+  // Panels
+  function tags(arr, cls) {
+    if(!arr.length) return `<span class="empty">Keine Einträge</span>`;
+    return arr.map(s=>`<span class="result-tag ${cls}">${s.name}</span>`).join('');
+  }
+  document.getElementById('res-gold').innerHTML   = tags(gold,'gold-tag');
+  document.getElementById('res-seele').innerHTML  = tags(seele,'seele-tag');
+  document.getElementById('res-pflicht').innerHTML= tags(pflicht,'');
+  document.getElementById('res-reduce').innerHTML = tags(reduce,'');
+
+  // Scatter plot
+  const canvas = document.getElementById('scatterCanvas');
+  const dpr = window.devicePixelRatio || 1;
+  const W = canvas.offsetWidth || 680;
+  const H = 420;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  const pad = { left:48, right:24, top:20, bottom:44 };
+  const plotW = W - pad.left - pad.right;
+  const plotH = H - pad.top - pad.bottom;
+
+  ctx.fillStyle = '#F8FAFD';
+  ctx.beginPath();
+  ctx.roundRect(0,0,W,H,8);
+  ctx.fill();
+
+  // Grid lines
+  ctx.strokeStyle = 'rgba(31,56,100,0.1)';
+  ctx.lineWidth = 1;
+  for(let v=0;v<=5;v++){
+    const x = pad.left + (v/5)*plotW;
+    const y = pad.top + ((5-v)/5)*plotH;
+    ctx.beginPath(); ctx.moveTo(x,pad.top); ctx.lineTo(x,pad.top+plotH); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(pad.left,y); ctx.lineTo(pad.left+plotW,y); ctx.stroke();
+  }
+
+  // Sweet spot zone (n>=3, l>=3)
+  const sx = pad.left + (3/5)*plotW;
+  const sy = pad.top;
+  const sw = plotW - (3/5)*plotW;
+  const sh = (2/5)*plotH;
+  ctx.fillStyle = 'rgba(200,168,75,0.12)';
+  ctx.fillRect(sx,sy,sw,sh);
+  ctx.fillStyle = 'rgba(160,120,30,0.6)';
+  ctx.font = '10px DM Sans, sans-serif';
+  ctx.textAlign = 'right';
+  ctx.fillText('Sweet Spot', pad.left+plotW-6, pad.top+14);
+
+  // Axis labels
+  ctx.fillStyle = 'rgba(31,56,100,0.5)';
+  ctx.font = '11px DM Sans, sans-serif';
+  ctx.textAlign = 'center';
+  for(let v=1;v<=5;v++){
+    ctx.fillText(v, pad.left+(v/5)*plotW, pad.top+plotH+18);
+    ctx.textAlign = 'right';
+    ctx.fillText(v, pad.left-8, pad.top+((5-v)/5)*plotH+4);
+    ctx.textAlign = 'center';
+  }
+  // Axis titles
+  ctx.fillStyle = 'rgba(31,56,100,0.4)';
+  ctx.font = '11px DM Sans, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Netzwerkpotenzial', pad.left+plotW/2, H-6);
+  ctx.save(); ctx.translate(13, pad.top+plotH/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText('Leidenschaft', 0, 0); ctx.restore();
+
+  // Group overlapping points
+  const groups = {};
+  scored.forEach(s=>{
+    const key = `${s.n}_${s.l}`;
+    if(!groups[key]) groups[key]={n:s.n,l:s.l,items:[]};
+    groups[key].items.push(s);
+  });
+
+  const overlapList = [];
+  const bubbles = [];
+  Object.values(groups).forEach(g=>{
+    const cx = pad.left + (g.n/5)*plotW;
+    const cy = pad.top + ((5-g.l)/5)*plotH;
+    const total = g.items.reduce((a,b)=>a+b.total,0)/g.items.length;
+    const isGold = g.l>=3&&g.n>=3;
+    const isPotenzial = total>=4&&!isGold;
+    const r = 18;
+
+    ctx.shadowColor = isGold ? 'rgba(200,168,75,0.4)' : 'rgba(31,56,100,0.15)';
+    ctx.shadowBlur = isGold ? 12 : 5;
+    ctx.beginPath();
+    ctx.arc(cx,cy,r,0,Math.PI*2);
+    ctx.fillStyle = isGold ? '#C8A84B' : isPotenzial ? '#1a2744' : '#CBD5E1';
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // Always show count
+    ctx.fillStyle = isGold ? '#fff' : isPotenzial ? '#fff' : '#6b7a99';
+    ctx.font = 'bold 13px DM Sans, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(g.items.length, cx, cy);
+
+    bubbles.push({ cx, cy, r, items: g.items, n: g.n, l: g.l });
+    if(g.items.length>1) overlapList.push(`N=${g.n}/L=${g.l}: ${g.items.map(i=>i.letter+' '+i.name).join(', ')}`);
+  });
+
+  ctx.textBaseline = 'alphabetic';
+  document.getElementById('scatterOverlap').textContent =
+    overlapList.length ? 'Mehrere Cluster an gleicher Position: ' + overlapList.join(' · ') : '';
+
+  // Hover tooltip
+  const existingTT = document.getElementById('scatterTooltip');
+  if(existingTT) existingTT.remove();
+  const tooltip = document.createElement('div');
+  tooltip.id = 'scatterTooltip';
+  tooltip.style.cssText = 'position:absolute;display:none;background:#0D1A30;border:1px solid rgba(200,168,75,0.5);border-radius:8px;padding:10px 14px;font-size:12px;color:#fff;pointer-events:none;max-width:280px;line-height:1.7;z-index:10;box-shadow:0 4px 20px rgba(0,0,0,0.5);';
+  canvas.parentElement.style.position = 'relative';
+  canvas.parentElement.appendChild(tooltip);
+
+  canvas.addEventListener('mousemove', e => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+    let hit = null;
+    for(const b of bubbles){
+      if(Math.sqrt((mx-b.cx)**2+(my-b.cy)**2) <= b.r+4){ hit=b; break; }
+    }
+    if(hit){
+      tooltip.style.display = 'block';
+      const tx = hit.cx + 26 > W - 200 ? hit.cx - 220 : hit.cx + 26;
+      tooltip.style.left = tx + 'px';
+      tooltip.style.top  = Math.max(0, hit.cy - 10) + 'px';
+      tooltip.innerHTML = hit.items.map(i=>`<div>${i.letter} — ${i.name} &nbsp;<span style="color:rgba(200,168,75,0.9)">x${i.total}</span></div>`).join('')
+        + `<div style="margin-top:6px;border-top:1px solid rgba(255,255,255,0.1);padding-top:6px;color:rgba(255,255,255,0.45);font-size:11px;">N: ${hit.n}  ·  L: ${hit.l}</div>`;
+    } else {
+      tooltip.style.display = 'none';
+    }
+  });
+  canvas.addEventListener('mouseleave', ()=>{ tooltip.style.display='none'; });
+
+  // Ranking
+  const sorted = [...scored].sort((a,b)=>b.total-a.total);
+  const rl = document.getElementById('rankingList');
+  rl.innerHTML='';
+  if(!sorted.length){rl.innerHTML='<tr><td colspan="5" style="color:var(--muted);font-size:13px;padding:16px;">Noch keine Bewertungen.</td></tr>';return;}
+  sorted.forEach((s,idx)=>{
+    const posColor = idx===0?'background:var(--gold);color:#fff;' : idx===1?'background:#9BA8B5;color:#fff;' : idx===2?'background:#CD7F32;color:#fff;' : 'background:var(--light);color:var(--muted);';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><span style="display:inline-flex;width:26px;height:26px;border-radius:50%;align-items:center;justify-content:center;font-size:11px;font-weight:700;${posColor}">${idx+1}</span></td>
+      <td style="font-weight:500;">${s.name}</td>
+      <td class="rtd-val rtd-l">${s.l}</td>
+      <td class="rtd-val rtd-n">${s.n}</td>
+      <td class="rtd-val"><span class="rtd-p-wrap">${s.total}</span></td>
+    `;
+    rl.appendChild(tr);
+  });
+
+  // Export
+  let txt=`ENGAGEMENT ASSESSMENT — COACHING-ZUSAMMENFASSUNG\n`;
+  txt+=`Coachee: ${name}  |  Datum: ${date}\n${'─'.repeat(50)}\n\n`;
+  txt+=`GOLDZONE (L≥3 & N≥3, Potenzial ≥9) — Harada-Priorität:\n`;
+  gold.forEach(s=>txt+=`  ▶ ${s.name}  (L:${s.l} × N:${s.n} = P:${s.total})\n`);
+  if(!gold.length) txt+=`  (keine)\n`;
+  txt+=`\nSEELENPFLEGE (Leidenschaft hoch, Netzwerk tief):\n`;
+  seele.forEach(s=>txt+=`  ▶ ${s.name}  (L:${s.l} × N:${s.n} = P:${s.total})\n`);
+  if(!seele.length) txt+=`  (keine)\n`;
+  txt+=`\nPFLICHTÜBUNG (Netzwerk hoch, Leidenschaft tief):\n`;
+  pflicht.forEach(s=>txt+=`  ▶ ${s.name}  (L:${s.l} × N:${s.n} = P:${s.total})\n`);
+  if(!pflicht.length) txt+=`  (keine)\n`;
+  txt+=`\nREDUZIEREN:\n`;
+  reduce.forEach(s=>txt+=`  ▶ ${s.name}  (L:${s.l} × N:${s.n} = P:${s.total})\n`);
+  if(!reduce.length) txt+=`  (keine)\n`;
+  txt+=`\n${'─'.repeat(50)}\nTOP 3 FÜR HARADA-PLAN (max. P=25):\n`;
+  sorted.slice(0,3).forEach((s,i)=>txt+=`  ${i+1}. ${s.name} — Potenzial ${s.total}/25\n`);
+  txt+=`\nGoldzone-Engagements als konkrete Ziele formulieren\n(z.B. «Eintritt in Vorstand bis [Jahr]», «Amt übernehmen»).`;
+
+  const subHL=[];
+  CLUSTERS.forEach((cl,ci)=>{
+    Object.entries(answers[ci].subs).forEach(([ii,s])=>{
+      if((s.l||0)>=4||(s.n||0)>=4) subHL.push(`  • ${cl.items[ii]}  (L:${s.l||'–'} / N:${s.n||'–'})`);
+    });
+  });
+  if(subHL.length) txt+=`\n\nBEWERTETE EINZELENGAGEMENTS (Score ≥4):\n`+subHL.join('\n');
+
+  document.getElementById('exportText').textContent=txt;
+}
+
+function copyExport(){
+  navigator.clipboard.writeText(document.getElementById('exportText').textContent).then(()=>{
+    const b=document.querySelector('.btn-copy');
+    b.textContent='✓ Kopiert!';
+    setTimeout(()=>b.textContent='Kopieren',2000);
+  });
+}
+
+function buildCoachURL() {
+  const name = document.getElementById('inputName').value || '';
+  const date = document.getElementById('inputDate').value || '';
+  const data = CLUSTERS.map((_,ci) => {
+    const a = answers[ci];
+    return `${a.l||0},${a.n||0}`;
+  }).join(';');
+  const params = new URLSearchParams({ name, date, data });
+  return location.href.split('?')[0] + '?' + params.toString();
+}
+
+function sendEmail() {
+  const name = document.getElementById('inputName').value || '(kein Name)';
+  const date = document.getElementById('inputDate').value || '';
+  const btn = document.getElementById('btnSendEmail');
+  const status = document.getElementById('emailStatus');
+  btn.disabled = true;
+  btn.textContent = '⏳ Wird gesendet…';
+  status.style.display = 'block';
+  status.textContent = '';
+
+  emailjs.send('service_yw6gsbd', 'template_457alri', {
+    coachee_name: name,
+    date: date,
+    coach_url: buildCoachURL(),
+    assessment_type: 'Engagement-Assessment'
+  }).then(() => {
+    btn.textContent = '✓ Gesendet!';
+    btn.style.background = 'var(--green, #1E6B3C)';
+    status.textContent = 'Die Auswertung wurde an alfred@raucheisen.ch gesendet.';
+  }).catch(err => {
+    btn.disabled = false;
+    btn.textContent = '📧 Auswertung an Coach senden';
+    status.textContent = 'Fehler beim Senden: ' + (err.text || JSON.stringify(err));
+    console.error(err);
+  });
+}
+
+function resetAll(){
+  answers=CLUSTERS.map(()=>({l:null,n:null,subs:{}}));
+  currentPage=0; manualOpen.clear();
+  showScreen('screen-intro');
+}
+
+// Load from URL params (coach link)
+(function loadFromURL(){
+  const p = new URLSearchParams(location.search);
+  if(!p.get('data')) return;
+  const name = p.get('name')||'';
+  const date = p.get('date')||'';
+  const data = p.get('data').split(';');
+  document.getElementById('inputName').value = name;
+  document.getElementById('inputDate').value = date;
+  data.forEach((pair, ci) => {
+    const [l, n] = pair.split(',').map(Number);
+    if(ci < CLUSTERS.length){ answers[ci].l = l||null; answers[ci].n = n||null; }
+  });
+  buildResults();
+  showScreen('screen-results');
+  document.getElementById('btnSendEmail').style.display = 'none';
+})();
+</script>
+</body>
+</html>
