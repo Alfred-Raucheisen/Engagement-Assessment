@@ -207,7 +207,18 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--navy);
   </div>
 </div>
 
-<!-- RESULTS -->
+<!-- CONFIRMATION (Coachee sieht das nach dem Senden) -->
+<div class="screen" id="screen-confirmation">
+  <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--cream);">
+    <div style="max-width:480px;text-align:center;padding:48px 32px;">
+      <div style="width:64px;height:64px;background:var(--navy);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:28px;">✓</div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:28px;color:var(--navy);margin-bottom:16px;">Vielen Dank!</h2>
+      <p style="font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:12px;">Ihre Antworten wurden erfasst und an Ihren Coach übermittelt.</p>
+      <p style="font-size:15px;color:var(--muted);line-height:1.7;">Die Auswertung wird im nächsten Coaching-Gespräch gemeinsam besprochen.</p>
+      <p style="font-size:13px;color:#B0BAC8;margin-top:24px;">Sie können dieses Fenster jetzt schliessen.</p>
+    </div>
+  </div>
+</div>
 <div class="screen" id="screen-results">
   <div class="results-header">
     <div class="container">
@@ -457,7 +468,11 @@ function nextPage() {
   const allRated = pg.clusters.every(ci => answers[ci].l!==null && answers[ci].n!==null);
   if(!allRated) return;
   if(currentPage < PAGES.length-1){ currentPage++; renderPage(); }
-  else { buildResults(); showScreen('screen-results'); }
+  else {
+    // Build results in background for coach URL, but show send screen
+    buildResults();
+    showScreen('screen-results');
+  }
 }
 
 function prevPage() {
@@ -706,9 +721,7 @@ function sendEmail() {
     coach_url: buildCoachURL(),
     assessment_type: 'Engagement-Assessment'
   }).then(() => {
-    btn.textContent = '✓ Gesendet!';
-    btn.style.background = 'var(--green, #1E6B3C)';
-    status.textContent = 'Die Auswertung wurde an alfred@raucheisen.ch gesendet.';
+    showScreen('screen-confirmation');
   }).catch(err => {
     btn.disabled = false;
     btn.textContent = '📧 Auswertung an Coach senden';
