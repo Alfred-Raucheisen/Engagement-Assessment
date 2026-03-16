@@ -197,7 +197,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--navy);
   <div class="container">
     <div class="page-wrap">
       <div class="page-title" id="pageTitle"></div>
-      <div class="page-sub">Bewerten Sie jeden Cluster: Wie viel <strong>Leidenschaft</strong> bringen Sie mit (1–5) und wie hoch ist das <strong>Netzwerkpotenzial</strong> für Ihre Praxis (1–5)? Bei einer 5 klappen die Einzelengagements automatisch auf. Bei Clustern mit hoher Leidenschaft lohnt es sich, auch die konkreten Engagements darunter anzuschauen — das erleichtert später die Zielformulierung im Coaching.</div>
+      <div class="page-sub">Bewerten Sie jeden Cluster: Wie viel <strong>Leidenschaft</strong> bringen Sie mit (1–5) und wie hoch ist das <strong>Netzwerkpotenzial</strong> für Ihre Praxis (1–5)? Bei einer 5 klappen die Einzelengagements automatisch auf.</div>
+      <div style="background:#EEF3FA;border-left:4px solid var(--navy);border-radius:0 8px 8px 0;padding:12px 16px;margin-bottom:28px;font-size:13px;color:var(--navy);line-height:1.6;">
+        💡 Bei Clustern mit hoher Leidenschaft lohnt es sich, auch die konkreten Engagements darunter anzuschauen — das erleichtert später die Zielformulierung im Coaching.
+      </div>
       <div id="cardContainer"></div>
       <div class="nav-row">
         <button class="btn-nav btn-back" id="btnBack" onclick="prevPage()">← Zurück</button>
@@ -211,11 +214,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--navy);
 <div class="screen" id="screen-confirmation">
   <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--cream);">
     <div style="max-width:480px;text-align:center;padding:48px 32px;">
-      <div style="width:64px;height:64px;background:var(--navy);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:28px;">✓</div>
+      <div style="width:64px;height:64px;background:var(--navy);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:28px;color:white;">✓</div>
       <h2 style="font-family:'Playfair Display',serif;font-size:28px;color:var(--navy);margin-bottom:16px;">Vielen Dank!</h2>
       <p style="font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:12px;">Ihre Antworten wurden erfasst und an Ihren Coach übermittelt.</p>
       <p style="font-size:15px;color:var(--muted);line-height:1.7;">Die Auswertung wird im nächsten Coaching-Gespräch gemeinsam besprochen.</p>
       <p style="font-size:13px;color:#B0BAC8;margin-top:24px;">Sie können dieses Fenster jetzt schliessen.</p>
+      <div id="conf-status" style="display:none;margin-top:16px;font-size:13px;color:var(--muted);">⏳ Auswertung wird übermittelt…</div>
     </div>
   </div>
 </div>
@@ -286,11 +290,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--navy);
     </div>
 
     <div class="nav-row" style="padding-bottom:60px;">
-      <button class="btn-nav btn-next" id="btnSendEmail" onclick="sendEmail()">📧 Auswertung an Coach senden</button>
       <button class="btn-nav btn-back" onclick="goBack()">← Bewertung anpassen</button>
       <button class="btn-nav btn-back" onclick="resetAll()">Neue Erfassung</button>
     </div>
-    <div id="emailStatus" style="text-align:center;font-size:13px;color:var(--muted);padding-bottom:40px;display:none;"></div>
   </div>
 </div>
 
@@ -357,7 +359,7 @@ function renderPage() {
   document.getElementById('progressText').textContent = `Seite ${currentPage+1} / ${PAGES.length}`;
   document.getElementById('progressFill').style.width = ((currentPage+1)/PAGES.length*100)+'%';
   document.getElementById('btnBack').style.display = currentPage===0 ? 'none' : '';
-  document.getElementById('btnNext').textContent = currentPage===PAGES.length-1 ? 'Auswertung anzeigen →' : 'Weiter →';
+  document.getElementById('btnNext').textContent = currentPage===PAGES.length-1 ? 'Auswertung absenden →' : 'Weiter →';
   const c = document.getElementById('cardContainer');
   c.innerHTML = '';
   pg.clusters.forEach(ci => c.appendChild(buildCard(ci)));
@@ -468,11 +470,28 @@ function nextPage() {
   const allRated = pg.clusters.every(ci => answers[ci].l!==null && answers[ci].n!==null);
   if(!allRated) return;
   if(currentPage < PAGES.length-1){ currentPage++; renderPage(); }
-  else {
-    // Build results in background for coach URL, but show send screen
-    buildResults();
-    showScreen('screen-results');
-  }
+  else { submitToCoach(); }
+}
+
+function submitToCoach() {
+  const name = document.getElementById('inputName').value || '(kein Name)';
+  const date = document.getElementById('inputDate').value || '';
+  
+  // Show sending state
+  showScreen('screen-confirmation');
+  document.getElementById('conf-status').style.display = 'block';
+
+  emailjs.send('service_yw6gsbd', 'template_457alri', {
+    coachee_name: name,
+    date: date,
+    coach_url: buildCoachURL(),
+    assessment_type: 'Engagement-Assessment'
+  }).then(() => {
+    document.getElementById('conf-status').style.display = 'none';
+  }).catch(err => {
+    document.getElementById('conf-status').textContent = 'Fehler beim Senden — bitte Coach kontaktieren.';
+    console.error(err);
+  });
 }
 
 function prevPage() {
