@@ -167,7 +167,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--navy);
       <div class="concept-row">
         <div class="concept-pill"><strong>Leidenschaft</strong> = Zulassungsbedingung</div>
         <div class="concept-pill"><strong>Netzwerkpotenzial</strong> = Selektionsbedingung</div>
-        <div class="concept-pill">14 Cluster · ca. 10 Min.</div>
+        <div class="concept-pill">17 Cluster · ca. 12 Min.</div>
       </div>
       <button class="btn-start" onclick="startAssessment()">Assessment starten</button>
     </div>
@@ -305,7 +305,7 @@ const CLUSTERS = [
   { letter:"C", name:"Kultur, Kunst & Patronage", tagline:"Aktive Beteiligung vs. passives Mäzenatentum",
     items:["Kunsthaus Zürich — Förderkreis","Tonhalle-Gesellschaft Zürich","Opernhaus Zürich — Freundeskreis","Schauspielhaus Zürich — Freundeskreis","Fondation Beyeler — Patronage","Zürich Film Festival / Lucerne Festival","Art Basel — Partnerkreise","Zoo Zürich — Förderverein / Stiftungsrat","Kunstsammler- / Uhrensammler-Kreise","Laienorchester / Kammermusikensemble","Chor (Jodel, Kirche, Männerchor)","Laientheater / Improvisationstheater"] },
   { letter:"D", name:"Bildung, Wissenschaft & Jugend", tagline:"Gesellschaftliche Verantwortung mit akademischem Netzwerk",
-    items:["ETH Foundation / ETH-Rat","Universitätsrat UZH / HSG","Alumni (UZH, ETH, HSG, Harvard, INSEAD)","Schulpflege / Schulrat","Gymnasialkommissionen","Pro Juventute — Stiftungsrat","Jugend debattiert — Juror / Botschafter","Moot Court — Coach / Juror / Organisator"] },
+    items:["ETH Foundation / ETH-Rat","Universitätsrat UZH / HSG","Alumni (UZH, ETH, HSG, Harvard, INSEAD, Oxbridge)","Privatschulen & Internate (Zuoz, Gstaad, Le Rosey) — Elternrat / Kuratorium","Elternkomitees Gymnasien & Mittelschulen","Schulpflege / Schulrat","Gymnasialkommissionen","Pro Juventute — Stiftungsrat","Jugend debattiert — Juror / Botschafter","Moot Court — Coach / Juror / Organisator"] },
   { letter:"E", name:"Politik, Public Affairs & Medien", tagline:"Direkter Zugang zu Regulatoren und Entscheidern",
     items:["Gemeinderat / Stadtrat","Kantonsrat","Parteikommissionen","Avenir Suisse","Foraus — Forum Aussenpolitik","Eidgenössische Expertenkommissionen","NZZ-Gesellschaft","SRG Deutschschweiz — Publikumsrat","Presserat"] },
   { letter:"F", name:"Wirtschaft, Verbände & Kammern", tagline:"Der klassische Anwaltsnetzwerk-Kanal",
@@ -313,7 +313,7 @@ const CLUSTERS = [
   { letter:"G", name:"Philanthropie, Stiftungen & Pro Bono", tagline:"Gesellschaftliche Wirkung mit höchstem Reputationseffekt",
     items:["Stiftungsratsmandate (gemeinnützig)","SwissFoundations","Pro Bono Legal (Amnesty, UNHCR)","Förderverein Universitätsspital (USZ)","Förderverein Kinderspital Zürich — inkl. Jahresgala","Schweizerisches Rotes Kreuz","Caritas Schweiz / Helvetas","Ashoka Schweiz","SOS-Kinderdorf Schweiz","Pro Senectute"] },
   { letter:"H", name:"Sport, Natur & Freizeit", tagline:"Authentizität entsteht dort, wo man sich wirklich wohlfühlt",
-    items:["Swiss Ski — Vorstand / Kommissionen","Skiclub mit Tradition (SC Zürich, SAC)","Golfclub (Zürich, Zumikon, Bad Ragaz)","Golf Schweiz — Verbandsarbeit","Segelclub / Regattaclub","Swiss Tennis — Verband","Schweizer Alpen-Club (SAC)","Swiss Olympic — Rechtsgremien","Jagdgesellschaft","Reiten / Poloclubs"] },
+    items:["Swiss Ski — Vorstand / Kommissionen","Skiclub mit Tradition (SC Zürich, SAC)","Golfclub (Zürich, Zumikon, Bad Ragaz)","Golf Schweiz — Verbandsarbeit","Segelclub / Regattaclub","Swiss Tennis — Verband","Schweizer Alpen-Club (SAC)","Swiss Olympic — Rechtsgremien","Jagdgesellschaft","Reiten / Poloclubs","Oldtimer-Clubs (Oldtimer-Galerie, AGVS Historic)","Aviation / Pilotenvereinigungen (AOPA Schweiz)"] },
   { letter:"I", name:"International & Diplomatisch", tagline:"Für international tätige Anwälte",
     items:["International Bar Association (IBA)","AIJA (Jungrechtsanwälte bis 45)","Diplomatisches Corps Zürich","UN Global Compact Schweiz","ICRC (IKRK) — Beratungsgremien","WIPO-nahe Netzwerke","World Economic Forum"] },
   { letter:"J", name:"Digital, Innovation & Legal Tech", tagline:"Zukunftsrelevanz signalisieren — aber authentisch",
@@ -325,15 +325,22 @@ const CLUSTERS = [
   { letter:"M", name:"Frauen, Gender & Chancengleichheit", tagline:"Wachsendes und einflussreiches Netzwerkfeld",
     items:["Business and Professional Women (BPW)","Soroptimist International","Swiss Board Women","Netzwerk Schweizer Juristinnen","Alliance F","Terre des Femmes Schweiz","Women in Tech Switzerland","UN Women Schweiz"] },
   { letter:"N", name:"Umwelt, Aktivismus, Ethik & ESG", tagline:"Haltung zeigen — mit Relevanz für ESG und Regulierung",
-    items:["WWF Schweiz — Stiftungsrat / Patronat","Pro Natura","Greenpeace Schweiz","Klimaseniorinnen Schweiz","Swiss Climate Foundation","Ethos — Fondation Ethos (Aktionärsstiftung)","Swiss Sustainable Finance (SSF)","Transparency International Schweiz","Basel Institute on Governance","Ethikkommissionen (kantonal / national)"] }
+    items:["WWF Schweiz — Stiftungsrat / Patronat","Pro Natura","Greenpeace Schweiz","Klimaseniorinnen Schweiz","Swiss Climate Foundation","Ethos — Fondation Ethos (Aktionärsstiftung)","Swiss Sustainable Finance (SSF)","Transparency International Schweiz","Basel Institute on Governance","Ethikkommissionen (kantonal / national)"] },
+  { letter:"O", name:"Boards, Beiräte & Governance", tagline:"CEO-Netzwerke durch unternehmerische Mitverantwortung",
+    items:["Verwaltungsrat börsenkotierter Unternehmen","Verwaltungsrat KMU / Familienunternehmen","Advisory Board / Beirat (Startup, Scale-up)","Audit Committee / Prüfungsausschuss","Nominierungs- / Vergütungsausschuss","Stiftungsrat (operative Stiftung)","Genossenschaftsrat (Migros, Raiffeisen etc.)","Aufsichtsrat (Deutschland/Österreich)"] },
+  { letter:"P", name:"Vertrauensgemeinschaften & Spirituelle Netzwerke", tagline:"Unsichtbar aber sehr dicht — Vertrauen als Fundament",
+    items:["Landeskirchen (reformiert, katholisch) — Kirchenrat / Synode","Jüdische Gemeinden (SIG, Israelitische Kultusgemeinde)","Muslimische Gemeinschaften (FIDS, lokale Moscheen)","Freikirchen & evangelikale Netzwerke","Anthroposophische Gesellschaft","Quäker / Andere Friedenskirchen","Interreligiöser Dialog (Zürcher Lehrhaus)"] },
+  { letter:"Q", name:"Intellektuelle Zirkel & Salons", tagline:"Positionierung durch Ideen — der diskreteste Reputationskanal",
+    items:["Philosophische Gesellschaft Zürich / Basel","Think Tanks (Foraus, Avenir Suisse, CSS)","Debattierclubs (Zürich, Bern, Genf)","Private Salons & Dinner-Diskussionsrunden","Literatur- und Lesekreise (anspruchsvoll)","Zukunftsforum / Futur3 / Gottlieb Duttweiler Institut","Académie des sciences morales et politiques (Romandie)","Interdisziplinäre Forschungszirkel (Uni-nahe)"] },
 ];
 
 const PAGES = [
-  { title:"Service Clubs, Tradition & Kultur",    clusters:[0,1,2]   },
-  { title:"Bildung, Politik & Wirtschaft",        clusters:[3,4,5]   },
-  { title:"Philanthropie, Sport & International", clusters:[6,7,8]   },
-  { title:"Digital, Tafelkultur & Spezialfelder", clusters:[9,10,11] },
-  { title:"Frauen, Umwelt & Ethik",               clusters:[12,13]   }
+  { title:"Service Clubs, Tradition & Kultur",         clusters:[0,1,2]    },
+  { title:"Bildung, Politik & Wirtschaft",             clusters:[3,4,5]    },
+  { title:"Philanthropie, Sport & International",      clusters:[6,7,8]    },
+  { title:"Digital, Tafelkultur & Spezialfelder",      clusters:[9,10,11]  },
+  { title:"Frauen, Umwelt & Ethik",                    clusters:[12,13]    },
+  { title:"Boards, Vertrauen & Intellekt",             clusters:[14,15,16] },
 ];
 
 let answers = CLUSTERS.map(() => ({ l:null, n:null, subs:{} }));
