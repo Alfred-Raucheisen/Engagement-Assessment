@@ -348,6 +348,14 @@ let currentPage = 0;
 let manualOpen = new Set();
 
 function startAssessment() {
+  const name = document.getElementById('inputName').value.trim();
+  if (!name) {
+    const el = document.getElementById('inputName');
+    el.style.borderColor = '#C0392B';
+    el.placeholder = 'Bitte Name eintragen';
+    el.focus();
+    return;
+  }
   const d = document.getElementById('inputDate');
   if (!d.value) d.value = new Date().toISOString().slice(0,10);
   showScreen('screen-questions');
